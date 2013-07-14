@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.tarena.po">
+	<class name="Answer" table="t_answer">
+		<composite-id>
+			<key-many-to-one name="answerSetId" column="answer_set_id"></key-many-to-one>
+			<key-property name="questionId" column="question_id"></key-property>
+			<key-property name="answerId" column="answer_id"></key-property>
+		</composite-id>
+		<property name="label"></property>
+	</class>
+</hibernate-mapping>  
