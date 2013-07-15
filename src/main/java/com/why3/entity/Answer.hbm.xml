@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC 
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping package="com.tarena.po">
+<hibernate-mapping package="com.why3.entity">
 	<class name="Answer" table="t_answer">
 		<composite-id>
 			<key-many-to-one name="answerSetId" column="answer_set_id"></key-many-to-one>
