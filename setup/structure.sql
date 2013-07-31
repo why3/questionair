@@ -63,6 +63,7 @@ DROP TABLE IF EXISTS `t_question_set`;
 CREATE TABLE `t_question_set` (
   `question_set_id` int(11) NOT NULL AUTO_INCREMENT,
   `content` longtext NOT NULL,
+  `title` varchar(50) NOT NULL,
   PRIMARY KEY (`question_set_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -79,9 +80,11 @@ CREATE TABLE `t_user` (
   `username` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
   `power` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `email` varchar(50) NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username_UNIQUE` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
