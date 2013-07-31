@@ -71,11 +71,11 @@ public class PageBean {
 		this.maxPages = maxCount;
 	}
 	
-	public boolean hasNext() {
+	public boolean getNext() {
 		return pageNo < getMaxPages();
 	}
 	
-	public boolean hasPrev() {
+	public boolean getPrev() {
 		return pageNo > 1;
 	}
 

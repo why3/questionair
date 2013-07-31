@@ -1,4 +1,4 @@
-package com.why3.entity;
+package com.why3.questionair.entity;
 
 import java.io.Serializable;
 
@@ -27,9 +27,19 @@ public class User implements Serializable {
 	private String password;
 
 	/**
+	 * The email of the user.
+	 */
+	private String email;
+
+	/**
+	 * The real name of the user.
+	 */
+	private String name;
+
+	/**
 	 * The power bits.
 	 */
-	private int power;
+	private Long power;
 
 	public User() {
 	}
@@ -58,17 +68,44 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	public int getPower() {
+	public Long getPower() {
 		return power;
 	}
 
-	public void setPower(int power) {
+	public void setPower(Long power) {
 		this.power = power;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
+	/**
+	 * @return the email
 	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @param email
+	 *            the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -77,9 +114,6 @@ public class User implements Serializable {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

@@ -1,18 +1,31 @@
-package com.why3.entity;
+package com.why3.questionair.entity;
 
 import java.io.Serializable;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.alibaba.fastjson.JSONObject;
 
+/**
+ * Question Set Entity.
+ * 
+ * @author plux
+ * 
+ */
 public class QuestionSet implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
-	private static final Log log = LogFactory.getLog(QuestionSet.class);
 
+	/**
+	 * The question ID.
+	 */
 	private int questionSetId;
+
+	/**
+	 * The title of the question set.
+	 */
+	private String title;
+
+	/**
+	 * The JSON content of the question set.
+	 */
 	private JSONObject content;
 
 	public QuestionSet() {
@@ -31,11 +44,18 @@ public class QuestionSet implements Serializable {
 	}
 
 	public void setContent(String content) {
-		log.debug(content);
 		this.content = JSONObject.parseObject(content);
 	}
 
 	public JSONObject getJsonObject() {
 		return this.content;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 }

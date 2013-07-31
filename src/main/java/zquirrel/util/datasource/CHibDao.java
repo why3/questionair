@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 
 public class CHibDao<T extends Serializable> implements HibDao<T> {
@@ -196,6 +197,14 @@ public class CHibDao<T extends Serializable> implements HibDao<T> {
 		query.setProjection(Projections.rowCount()).add(restrictions);
 		count = (Integer) query.uniqueResult();
 		return count;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<T> list(Criterion criterion, Order order, int start, int length) {
+		return HibernateUtil.getSession().createCriteria(clazz).add(criterion)
+				.addOrder(order).setFirstResult(start).setMaxResults(length)
+				.list();
 	}
 
 }

@@ -1,15 +1,14 @@
-package com.why3.dao.impl;
+package com.why3.questionair.dao.impl;
 
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
 
 import zquirrel.util.datasource.CHibDao;
-import zquirrel.util.datasource.HibDao;
 
-import com.why3.dao.IAnswerDao;
-import com.why3.entity.Answer;
-import com.why3.entity.AnswerSet;
+import com.why3.questionair.dao.IAnswerDao;
+import com.why3.questionair.entity.Answer;
+import com.why3.questionair.entity.AnswerSet;
 
 /**
  * Data Access Object of {@link Answer}.
@@ -17,19 +16,20 @@ import com.why3.entity.AnswerSet;
  * @author yfwz100
  * 
  */
-public class AnswerDaoImpl implements IAnswerDao {
+public class AnswerDaoImpl extends CHibDao<Answer> implements IAnswerDao {
 
-	// the abstract data access object.
-	private HibDao<Answer> dao = new CHibDao<Answer>(Answer.class);
+	public AnswerDaoImpl() {
+		super(Answer.class);
+	}
 
 	@Override
 	public List<Answer> listAnswers(AnswerSet as) {
-		return dao.list(Restrictions.eq("answerSetId", as));
+		return this.list(Restrictions.eq("answerSetId", as));
 	}
 
 	@Override
 	public Answer findAnswer(AnswerSet as, int qid, int aid) {
-		return dao.find(Restrictions.and(Restrictions.and(
+		return this.find(Restrictions.and(Restrictions.and(
 				Restrictions.eq("answerSetId", as),
 				Restrictions.eq("questionId", qid)), Restrictions.eq(
 				"answerId", aid)));
@@ -37,12 +37,12 @@ public class AnswerDaoImpl implements IAnswerDao {
 
 	@Override
 	public Object saveAnswer(Answer answer) {
-		return dao.save(answer);
+		return this.save(answer);
 	}
 
 	@Override
 	public int deleteAnswer(Answer answer) {
-		return dao.delete(answer);
+		return this.delete(answer);
 	}
 
 	@Override

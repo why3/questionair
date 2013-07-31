@@ -9,6 +9,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 
 
@@ -284,6 +285,25 @@ public class AtomicHibDao<T extends Serializable> implements HibDao<T> {
 
 	public Throwable getError() {
 		return error;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<T> list(Criterion criterion, Order order, int start, int length) {
+		Session session = HibernateUtil.getSession();
+		session.beginTransaction();
+		List<T> li = null;
+		try {
+			li = session.createCriteria(clazz).add(criterion).addOrder(order)
+					.setFirstResult(start).setMaxResults(length).list();
+			session.getTransaction().commit();
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+			error = e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return li;
 	}
 
 }

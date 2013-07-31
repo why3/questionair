@@ -1,4 +1,4 @@
-package com.why3.entity;
+package com.why3.questionair.entity;
 
 import java.io.Serializable;
 

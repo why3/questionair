@@ -9,7 +9,7 @@ public class HibernateExport {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new SchemaExport(new Configuration().configure()).create(true, true);
+		new SchemaExport(new Configuration().configure("hibernate/hibernate.cfg.xml")).create(true, true);
 	}
 
 }

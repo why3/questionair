@@ -1,9 +1,9 @@
-package com.why3.dao;
+package com.why3.questionair.dao;
 
 import java.util.List;
 
-import com.why3.entity.Answer;
-import com.why3.entity.AnswerSet;
+import com.why3.questionair.entity.Answer;
+import com.why3.questionair.entity.AnswerSet;
 
 /**
  * The data access object interface of {@link Answer}.

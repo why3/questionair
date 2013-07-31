@@ -5,19 +5,20 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 public class HibernateUtil {
-	
+
 	private static SessionFactory sessionFactory;
 	private static ThreadLocal<Session> localSession;
-	
+
 	static {
-		Configuration configuration = new Configuration().configure();
+		Configuration configuration = new Configuration()
+				.configure("hibernate/hibernate.cfg.xml");
 		sessionFactory = configuration.buildSessionFactory();
 		localSession = new ThreadLocal<Session>();
 	}
 
 	private HibernateUtil() {
 	}
-	
+
 	public static Session getSession() {
 		Session session = localSession.get();
 		if (session == null) {
@@ -26,7 +27,7 @@ public class HibernateUtil {
 		}
 		return session;
 	}
-	
+
 	public static void closeSession() {
 		Session session = localSession.get();
 		if (session != null && session.isOpen()) {

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 
 public interface HibDao<T extends Serializable> {
 
@@ -33,6 +34,22 @@ public interface HibDao<T extends Serializable> {
 	 * @return the list of entities.
 	 */
 	public abstract List<T> list(Criterion criterion);
+
+	/**
+	 * Obtain a filtered list of the entity.
+	 * 
+	 * @param criterion
+	 *            the restriction to limit the result range.
+	 * @param order
+	 *            the order used to organize th result.
+	 * @param start
+	 *            the first row to fetch.
+	 * @param length
+	 *            the max results to fetch.
+	 * @return the list of entities.
+	 */
+	public abstract List<T> list(Criterion criterion, Order order, int start,
+			int length);
 
 	/**
 	 * Obtain a filtered list of the entity with start and length.

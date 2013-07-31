@@ -1,10 +1,10 @@
-package com.why3.dao;
+package com.why3.questionair.dao;
 
 import java.util.List;
 
-import com.why3.entity.AnswerSet;
-import com.why3.entity.QuestionSet;
-import com.why3.entity.User;
+import com.why3.questionair.entity.AnswerSet;
+import com.why3.questionair.entity.QuestionSet;
+import com.why3.questionair.entity.User;
 
 /**
  * The data access object inferface for {@link AnswerSet}.
@@ -56,6 +56,17 @@ public interface IAnswerSetDao {
 	 * @return the AnswerSet object.
 	 */
 	AnswerSet findAnswerSet(int asid);
+
+	/**
+	 * Get the latest answer set of the user and given question set.
+	 * 
+	 * @param qSet
+	 *            the corresponding question set.
+	 * @param user
+	 *            the user.
+	 * @return the answer set if found, otherwise null will be returned.
+	 */
+	AnswerSet findLatestAnswerSet(QuestionSet qSet, User user);
 
 	/**
 	 * Update answer set.

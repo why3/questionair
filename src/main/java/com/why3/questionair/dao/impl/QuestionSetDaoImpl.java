@@ -1,12 +1,11 @@
-package com.why3.dao.impl;
+package com.why3.questionair.dao.impl;
 
 import java.util.List;
 
 import zquirrel.util.datasource.CHibDao;
-import zquirrel.util.datasource.HibDao;
 
-import com.why3.dao.IQuestionSetDao;
-import com.why3.entity.QuestionSet;
+import com.why3.questionair.dao.IQuestionSetDao;
+import com.why3.questionair.entity.QuestionSet;
 
 /**
  * The implementation of the QuestionSet Data Access Object.
@@ -14,14 +13,16 @@ import com.why3.entity.QuestionSet;
  * @author yfwz100, Alvin.
  * 
  */
-public class QuestionSetDaoImpl implements IQuestionSetDao {
+public class QuestionSetDaoImpl extends CHibDao<QuestionSet> implements
+		IQuestionSetDao {
 
-	// the abstract dao.
-	private HibDao<QuestionSet> dao = new CHibDao<QuestionSet>(QuestionSet.class);
+	public QuestionSetDaoImpl() {
+		super(QuestionSet.class);
+	}
 
 	@Override
 	public int saveQuestionSet(QuestionSet questionSet) {
-		Integer qsid = (Integer) dao.save(questionSet);
+		Integer qsid = (Integer) this.save(questionSet);
 		if (qsid != null) {
 			return qsid;
 		} else {
@@ -31,17 +32,17 @@ public class QuestionSetDaoImpl implements IQuestionSetDao {
 
 	@Override
 	public QuestionSet findQuestionSet(int questionSetId) {
-		return dao.find(questionSetId);
+		return this.find(questionSetId);
 	}
 
 	@Override
 	public List<QuestionSet> listQuestionSets() {
-		return dao.listAll();
+		return this.listAll();
 	}
 
 	@Override
 	public int deleteQuestionSet(QuestionSet qs) {
-		return dao.delete(qs);
+		return this.delete(qs);
 	}
 
 	@Override
@@ -53,6 +54,6 @@ public class QuestionSetDaoImpl implements IQuestionSetDao {
 
 	@Override
 	public int updateQuestionSet(QuestionSet qs) {
-		return dao.update(qs);
+		return this.update(qs);
 	}
 }

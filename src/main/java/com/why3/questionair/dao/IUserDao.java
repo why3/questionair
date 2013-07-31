@@ -1,9 +1,8 @@
-package com.why3.dao;
+package com.why3.questionair.dao;
 
 import java.util.List;
 
-import com.why3.entity.User;
-
+import com.why3.questionair.entity.User;
 
 /**
  * The data access object interface for user.
@@ -16,18 +15,60 @@ public interface IUserDao {
 	/**
 	 * Find all users.
 	 * 
+	 * @param start
+	 *            the start row of the list.
+	 * @param maxResult
+	 *            the max results to fetch.
 	 * @return the list of users.
 	 */
-	List<User> findUsers();
+	List<User> findUsers(int start, int maxResult);
+
+	/**
+	 * The count of the users.
+	 * 
+	 * @return the count of all users.
+	 */
+	int count();
 
 	/**
 	 * Find all users with the same power bits.
 	 * 
 	 * @param bits
 	 *            the power bits.
+	 * @param start
+	 *            the start row of the list.
+	 * @param maxResult
+	 *            the max results to fetch.
 	 * @return the list of users.
 	 */
-	List<User> findUsersByPowerBits(long bits);
+	List<User> findUsersByPowerBits(long bits, int start, int maxResult);
+
+	/**
+	 * The count of the users.
+	 * 
+	 * @param powerBits
+	 *            the power bits.
+	 * @return the count of the users.
+	 */
+	int count(long powerBits);
+
+	/**
+	 * Find the users according to the example.
+	 * 
+	 * @param example
+	 *            the example entity
+	 * @return list of users.
+	 */
+	List<User> findUsers(User example, int start, int maxResults);
+
+	/**
+	 * The count of the users.
+	 * 
+	 * @param example
+	 *            the example entity.
+	 * @return the count of users.
+	 */
+	int count(User example);
 
 	/**
 	 * Find a specific user by username.
