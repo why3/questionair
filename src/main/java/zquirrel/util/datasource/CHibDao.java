@@ -11,6 +11,15 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 
+/**
+ * A handful generalized facade of data access object. This implementation
+ * doesn't handle the transaction. 
+ * 
+ * @author yfwz100
+ * 
+ * @param <T>
+ *            the entity.
+ */
 public class CHibDao<T extends Serializable> implements HibDao<T> {
 
 	// the log.

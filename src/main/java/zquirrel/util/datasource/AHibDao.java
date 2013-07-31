@@ -13,7 +13,9 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 
 /**
- * A handful generalized facade of data access object.
+ * A handful generalized facade of data access object. This implementation
+ * depends on the {@link HibernateUtil} which means the operation is controlled
+ * by the method itself.
  * 
  * @author yfwz100
  * 
