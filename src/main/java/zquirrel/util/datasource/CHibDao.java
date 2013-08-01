@@ -11,19 +11,16 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 
-/**
- * A handful generalized facade of data access object. This implementation
- * doesn't handle the transaction. 
- * 
- * @author yfwz100
- * 
- * @param <T>
- *            the entity.
- */
+import zquirrel.util.context.ContextRef;
+
 public class CHibDao<T extends Serializable> implements HibDao<T> {
 
 	// the log.
 	private final static Log log = LogFactory.getLog(CHibDao.class);
+
+	// the hibernate session.
+	@ContextRef
+	private Session session;
 
 	/**
 	 * The entity class.
@@ -48,8 +45,9 @@ public class CHibDao<T extends Serializable> implements HibDao<T> {
 	 */
 	@Override
 	public T find(Criterion restriction) {
-		Session session = HibernateUtil.getSession();
+		// Session session = getSession();
 		T obj = null;
+		LogFactory.getLog(CHibDao.class).warn("Session: " + session);
 		Criteria query = session.createCriteria(clazz);
 		query.add(restriction);
 		obj = clazz.cast(query.uniqueResult());
@@ -63,7 +61,7 @@ public class CHibDao<T extends Serializable> implements HibDao<T> {
 	 */
 	@Override
 	public T find(Serializable id) {
-		Session session = HibernateUtil.getSession();
+		Session session = getSession();
 		T obj = null;
 		obj = clazz.cast(session.get(clazz, id));
 		return obj;
@@ -78,7 +76,7 @@ public class CHibDao<T extends Serializable> implements HibDao<T> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<T> list(Criterion criterion) {
-		Session session = HibernateUtil.getSession();
+		Session session = getSession();
 		List<T> emps = null;
 		Criteria query = session.createCriteria(clazz);
 		query.add(criterion);
@@ -96,7 +94,7 @@ public class CHibDao<T extends Serializable> implements HibDao<T> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<T> list(Criterion criterion, int start, int length) {
-		Session session = HibernateUtil.getSession();
+		Session session = getSession();
 		List<T> emps = null;
 		Criteria query = session.createCriteria(clazz);
 		query.add(criterion);
@@ -114,7 +112,7 @@ public class CHibDao<T extends Serializable> implements HibDao<T> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<T> listAll() {
-		Session session = HibernateUtil.getSession();
+		Session session = getSession();
 		List<T> emps = null;
 		Criteria query = session.createCriteria(clazz);
 		emps = query.list();
@@ -129,7 +127,7 @@ public class CHibDao<T extends Serializable> implements HibDao<T> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<T> list(int start, int length) {
-		Session session = HibernateUtil.getSession();
+		Session session = getSession();
 		List<T> emps = null;
 		Criteria query = session.createCriteria(clazz);
 		query.setFirstResult(start);
@@ -148,7 +146,7 @@ public class CHibDao<T extends Serializable> implements HibDao<T> {
 	 */
 	@Override
 	public Object save(T object) {
-		Session session = HibernateUtil.getSession();
+		Session session = getSession();
 		Object id = session.save(object);
 		return id;
 	}
@@ -160,8 +158,7 @@ public class CHibDao<T extends Serializable> implements HibDao<T> {
 	 */
 	@Override
 	public int update(T object) {
-		Session session = HibernateUtil.getSession();
-		session.update(object);
+		getSession().update(object);
 		return 1;
 	}
 
@@ -172,8 +169,7 @@ public class CHibDao<T extends Serializable> implements HibDao<T> {
 	 */
 	@Override
 	public int delete(T obj) {
-		Session session = HibernateUtil.getSession();
-		session.delete(obj);
+		getSession().delete(obj);
 		return 1;
 	}
 
@@ -185,7 +181,7 @@ public class CHibDao<T extends Serializable> implements HibDao<T> {
 	@Override
 	public int count() {
 		int count = -1;
-		Session session = HibernateUtil.getSession();
+		Session session = getSession();
 		Criteria query = session.createCriteria(clazz);
 		query.setProjection(Projections.rowCount());
 		count = (Integer) query.uniqueResult();
@@ -201,7 +197,6 @@ public class CHibDao<T extends Serializable> implements HibDao<T> {
 	@Override
 	public int count(Criterion restrictions) {
 		int count = 0;
-		Session session = HibernateUtil.getSession();
 		Criteria query = session.createCriteria(clazz);
 		query.setProjection(Projections.rowCount()).add(restrictions);
 		count = (Integer) query.uniqueResult();
@@ -211,9 +206,19 @@ public class CHibDao<T extends Serializable> implements HibDao<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<T> list(Criterion criterion, Order order, int start, int length) {
-		return HibernateUtil.getSession().createCriteria(clazz).add(criterion)
+		return getSession().createCriteria(clazz).add(criterion)
 				.addOrder(order).setFirstResult(start).setMaxResults(length)
 				.list();
+	}
+
+	@Override
+	public void setSession(Session session) {
+		this.session = session;
+	}
+
+	@Override
+	public Session getSession() {
+		return this.session;
 	}
 
 }

@@ -3,6 +3,7 @@ package zquirrel.util.datasource;
 import java.io.Serializable;
 import java.util.List;
 
+import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 
@@ -120,5 +121,20 @@ public interface HibDao<T extends Serializable> {
 	 * @return the number of users.
 	 */
 	public abstract int count(Criterion restrictions);
+
+	/**
+	 * Set the hibernate session to use.
+	 * 
+	 * @param session
+	 *            the session to use.
+	 */
+	void setSession(Session session);
+
+	/**
+	 * Get the hibernate session.
+	 * 
+	 * @return the session.
+	 */
+	Session getSession();
 
 }

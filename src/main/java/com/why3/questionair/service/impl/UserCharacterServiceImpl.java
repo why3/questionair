@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.apache.commons.logging.LogFactory;
 
+import zquirrel.util.context.ContextRef;
+
 import com.why3.questionair.dao.IAnswerDao;
 import com.why3.questionair.dao.IAnswerSetDao;
 import com.why3.questionair.entity.Answer;
@@ -16,6 +18,11 @@ import com.why3.questionair.entity.User;
 import com.why3.questionair.service.IUserCharacterService;
 
 public class UserCharacterServiceImpl implements IUserCharacterService {
+
+	@ContextRef
+	private IAnswerDao answerDao;
+	@ContextRef
+	private IAnswerSetDao answerSetDao;
 
 	// the result map.
 	private static Map<String, String> resultMap = new HashMap<String, String>();
@@ -56,7 +63,7 @@ public class UserCharacterServiceImpl implements IUserCharacterService {
 			if (as == null)
 				throw new RuntimeException("Empty answer set.");
 
-			List<Answer> ansList = DaoContext.get(IAnswerDao.class)
+			List<Answer> ansList = answerDao
 					.listAnswers(as);
 
 			scoreMap.put("s", 0);
@@ -94,14 +101,14 @@ public class UserCharacterServiceImpl implements IUserCharacterService {
 			LogFactory.getLog(UserCharacterData.class).error(user.getUserId());
 			QuestionSet questionSet = new QuestionSet();
 			questionSet.setQuestionSetId(1);
-			AnswerSet answerSet = DaoContext.get(IAnswerSetDao.class)
+			AnswerSet answerSet = answerSetDao
 					.findLatestAnswerSet(questionSet, user);
 			init(answerSet);
 		}
 
 		@SuppressWarnings("unused")
 		public UserCharacterDataImpl(int asid) {
-			AnswerSet as = DaoContext.get(IAnswerSetDao.class).findAnswerSet(
+			AnswerSet as = answerSetDao.findAnswerSet(
 					asid);
 			init(as);
 		}
@@ -131,6 +138,26 @@ public class UserCharacterServiceImpl implements IUserCharacterService {
 	@Override
 	public UserCharacterData getCharacterData(AnswerSet as) {
 		return new UserCharacterDataImpl(as);
+	}
+
+	public IAnswerDao getAnswerDao() {
+		return answerDao;
+	}
+
+	public void setAnswerDao(IAnswerDao answerDao) {
+		this.answerDao = answerDao;
+	}
+
+	public IAnswerSetDao getAnswerSetDao() {
+		return answerSetDao;
+	}
+
+	public void setAnswerSetDao(IAnswerSetDao answerSetDao) {
+		this.answerSetDao = answerSetDao;
+	}
+
+	public static void setResultMap(Map<String, String> resultMap) {
+		UserCharacterServiceImpl.resultMap = resultMap;
 	}
 
 }

@@ -1,5 +1,6 @@
 package zquirrel.util.context;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -69,6 +70,10 @@ public abstract class ServiceContextSupport {
 		if (object == null || itfCls.isInstance(object)) {
 			try {
 				final Object target = contextMap.get(itfCls).newInstance();
+
+				inject(target);
+
+				// chain the method calls.
 				final TargetChainImpl targetChainImpl = new TargetChainImpl(
 						intercepters.iterator());
 				object = Proxy.newProxyInstance(this.getClass()
@@ -117,17 +122,80 @@ public abstract class ServiceContextSupport {
 		contextMap.remove(itf);
 	}
 
+	/**
+	 * Add the specific interceptor from the context.
+	 * 
+	 * @param intercepter
+	 *            the interceptor to add.
+	 * @return the {@link ServiceContextSupport} itself.
+	 */
 	public ServiceContextSupport addIntercepter(ContextIntercepter intercepter) {
 		intercepters.add(intercepter);
 		return this;
 	}
 
+	/**
+	 * Remove the specific interceptor from the context.
+	 * 
+	 * @param intercepter
+	 *            the interceptor to remove.
+	 * @return the {@link ServiceContextSupport} itself.
+	 */
 	public ServiceContextSupport removeIntercepter(
 			ContextIntercepter intercepter) {
 		intercepters.remove(intercepter);
 		return this;
 	}
+	
+	protected void inject(final Object target) throws IllegalArgumentException, IllegalAccessException {
+		inject(target, target.getClass());
+	}
 
+	protected void inject(final Object target, Class<?> clz) throws IllegalArgumentException, IllegalAccessException {
+		// the context reference injection.
+		for (Field field : clz.getDeclaredFields()) {
+			LogFactory.getLog(clz).warn(field);
+			ContextRef ref = field.getAnnotation(ContextRef.class);
+			if (ref != null) {
+				field.setAccessible(true);
+				Object obj = newServiceReference(field.getType());
+				field.set(target, obj);
+			}
+		}
+		if (clz.getSuperclass() != null) {
+			LogFactory.getLog(ServiceContextSupport.class).warn(clz.getSuperclass());
+			inject(target, clz.getSuperclass());
+		}
+	}
+
+	/**
+	 * Create a new service reference.
+	 * 
+	 * @param clz
+	 *            the interface class.
+	 * @return the instance.
+	 */
+	protected <T> T newServiceReference(final Class<T> clz) {
+		return clz.cast(Proxy.newProxyInstance(
+				this.getClass().getClassLoader(), new Class[] { clz },
+				new InvocationHandler() {
+					@Override
+					public Object invoke(final Object proxy,
+							final Method method, final Object[] args)
+							throws Throwable {
+						return method.invoke(
+								ServiceContextSupport.this.getInstance(clz),
+								args);
+					}
+				}));
+	}
+
+	/**
+	 * The target chain implementation.
+	 * 
+	 * @author plux
+	 * 
+	 */
 	private class TargetChainImpl implements ContextIntercepter.TargetChain {
 
 		private final Iterator<ContextIntercepter> intercepters;

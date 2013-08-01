@@ -13,9 +13,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 
 /**
- * A handful generalized facade of data access object. This implementation
- * depends on the {@link HibernateUtil} which means the operation is controlled
- * by the method itself.
+ * A handful generalized facade of data access object.
  * 
  * @author yfwz100
  * 
@@ -26,6 +24,9 @@ public class AHibDao<T extends Serializable> implements HibDao<T> {
 
 	// the log.
 	private final static Log log = LogFactory.getLog(AHibDao.class);
+	
+	// the injected session.
+	private Session session;
 
 	/**
 	 * The entity class.
@@ -332,6 +333,16 @@ public class AHibDao<T extends Serializable> implements HibDao<T> {
 			HibernateUtil.closeSession();
 		}
 		return li;
+	}
+
+	@Override
+	public void setSession(Session session) {
+		this.session = session;
+	}
+
+	@Override
+	public Session getSession() {
+		return this.session;
 	}
 
 }

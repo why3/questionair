@@ -3,14 +3,26 @@ package com.why3.questionair.web;
 import java.lang.reflect.Method;
 
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Session;
 
 import zquirrel.util.context.ContextIntercepter;
+import zquirrel.util.datasource.HibernateSessionDelegate;
 import zquirrel.util.datasource.HibernateUtil;
 import zquirrel.util.datasource.Transaction;
 
+import com.why3.questionair.dao.IAnswerDao;
+import com.why3.questionair.dao.IAnswerSetDao;
+import com.why3.questionair.dao.IQuestionSetDao;
+import com.why3.questionair.dao.IUserDao;
+import com.why3.questionair.dao.impl.AnswerDaoImpl;
+import com.why3.questionair.dao.impl.AnswerSetDaoImpl;
+import com.why3.questionair.dao.impl.QuestionSetDaoImpl;
+import com.why3.questionair.dao.impl.UserDaoImpl;
 import com.why3.questionair.service.IQuestionSetService;
+import com.why3.questionair.service.IUserCharacterService;
 import com.why3.questionair.service.IUserService;
 import com.why3.questionair.service.impl.QuestionSetServiceImpl;
+import com.why3.questionair.service.impl.UserCharacterServiceImpl;
 import com.why3.questionair.service.impl.UserServiceImpl;
 
 /**
@@ -25,8 +37,16 @@ public class ServiceContext extends zquirrel.util.context.ServiceContextSupport 
 	private static final ServiceContext CONTEXT = new ServiceContext();
 
 	{
+		register(Session.class, HibernateSessionDelegate.class);
+
+		register(IUserDao.class, UserDaoImpl.class);
+		register(IAnswerDao.class, AnswerDaoImpl.class);
+		register(IAnswerSetDao.class, AnswerSetDaoImpl.class);
+		register(IQuestionSetDao.class, QuestionSetDaoImpl.class);
+
 		register(IQuestionSetService.class, QuestionSetServiceImpl.class);
 		register(IUserService.class, UserServiceImpl.class);
+		register(IUserCharacterService.class, UserCharacterServiceImpl.class);
 
 		addIntercepter(new ContextIntercepter() {
 
@@ -42,12 +62,12 @@ public class ServiceContext extends zquirrel.util.context.ServiceContextSupport 
 
 				try {
 					Object result = chain.chain(target, method, args);
-					
+
 					if (HibernateUtil.getSession().getTransaction().isActive())
 						HibernateUtil.getSession().getTransaction().commit();
 					return result;
 				} catch (Exception ex) {
-					LogFactory.getLog(ServiceContext.class).error(ex);
+					LogFactory.getLog(ServiceContext.class).error("Error!", ex);
 					if (HibernateUtil.getSession().getTransaction().isActive())
 						HibernateUtil.getSession().getTransaction().rollback();
 					throw new RuntimeException(ex);

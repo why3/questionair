@@ -4,12 +4,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-/**
- * Utilities to use Hibernate more easily.
- * 
- * @author plux
- * 
- */
 public class HibernateUtil {
 
 	private static SessionFactory sessionFactory;
@@ -25,11 +19,6 @@ public class HibernateUtil {
 	private HibernateUtil() {
 	}
 
-	/**
-	 * Get or create a hibernate session in local thread.
-	 * 
-	 * @return the session.
-	 */
 	public static Session getSession() {
 		Session session = localSession.get();
 		if (session == null) {
@@ -39,9 +28,6 @@ public class HibernateUtil {
 		return session;
 	}
 
-	/**
-	 * Close the session in local thread.
-	 */
 	public static void closeSession() {
 		Session session = localSession.get();
 		if (session != null && session.isOpen()) {
